@@ -51,6 +51,7 @@ const config: PlaywrightTestConfig = {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
+        headless: true,
       },
     },
 
@@ -58,6 +59,7 @@ const config: PlaywrightTestConfig = {
       name: "firefox",
       use: {
         ...devices["Desktop Firefox"],
+        headless: true,
       },
     },
 
@@ -65,6 +67,7 @@ const config: PlaywrightTestConfig = {
       name: "webkit",
       use: {
         ...devices["Desktop Safari"],
+        headless: true,
       },
     },
 
