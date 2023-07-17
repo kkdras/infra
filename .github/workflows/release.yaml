@@ -23,7 +23,7 @@ jobs:
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v4
         with:
-          fromTag: ${{ steps.previous_tag.outputs.tag }}
+          fromTag: v2
           toTag: ${{ steps.current_tag.outputs.tag }}
 
       - name: Save changelog
