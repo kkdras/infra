@@ -30,7 +30,7 @@ jobs:
         run: |
           echo "${{ steps.changelog.outputs.changelog }}" > changelog.md
           cat changelog.md
-          echo "git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1)"
+          echo "${git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1)}"
           echo "tag=$(echo ${{ github.ref }} | sed 's/^refs\/tags\///')"
 
       - name: Render template
