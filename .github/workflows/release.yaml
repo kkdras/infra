@@ -34,10 +34,11 @@ jobs:
         with:
           template: .github/issue-template.md
           vars: |
-            Author: ${{ github.actor }}
-            Date: ${{ github.event.head_commit.timestamp }}
-            Version: ${{ steps.current_tag.outputs.tag }}
-            Changelog: ${{ steps.changelog.outputs.changelog }}
+            Author=${{ github.actor }}
+            Date=${{ github.event.head_commit.timestamp }}
+            Version=${{ steps.current_tag.outputs.tag }}
+            Changelog=
+            ${{ steps.changelog.outputs.changelog }}
 
       - name: create an issue
         uses: dacbd/create-issue-action@main
