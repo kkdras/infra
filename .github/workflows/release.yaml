@@ -23,15 +23,15 @@ jobs:
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v4
         with:
-          fromTag: v2
+          fromTag: ${{ steps.previous_tag.outputs.tag }}
           toTag: ${{ steps.current_tag.outputs.tag }}
 
       - name: Save changelog
         run: |
           echo "${{ steps.changelog.outputs.changelog }}" > changelog.md
           cat changelog.md
-          echo "${{ steps.previous_tag.outputs.tag }}"
-          echo "${{ steps.current_tag.outputs.tag }}"
+          echo "git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1)"
+          echo "tag=$(echo ${{ github.ref }} | sed 's/^refs\/tags\///')"
 
       - name: Render template
         id: template
