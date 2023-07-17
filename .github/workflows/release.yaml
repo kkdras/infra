@@ -30,7 +30,7 @@ jobs:
 
       - name: Render template
         id: template
-        uses: chuhlomin/render-template@v1.7
+        uses: chuhlomin/render-template@v1.4
         with:
           template: .github/issue-template.md
           vars: |
