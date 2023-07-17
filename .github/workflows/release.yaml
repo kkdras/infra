@@ -13,19 +13,25 @@ jobs:
 
       - name: Get previous tag
         id: previous_tag
-        run: echo ::set-output name=tag::$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))
+        run: echo "tag=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))" >> $GITHUB_OUTPUT
+
+      - name: Set current tag
+        id: current_tag
+        run: echo "tag=$(echo ${{ github.ref }} | sed 's/^refs\/tags\///')" >> $GITHUB_OUTPUT
 
       - name: Generate changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v4
         with:
           fromTag: ${{ steps.previous_tag.outputs.tag }}
-          toTag: ${{ github.ref }}
+          toTag: ${{ steps.current_tag.outputs.tag }}
 
       - name: Save changelog
         run: |
           echo "${{ steps.changelog.outputs.changelog }}" > changelog.md
           cat changelog.md
+          echo "${{ steps.previous_tag.outputs.tag }}"
+          echo "${{ steps.current_tag.outputs.tag }}"
 
       - name: Render template
         id: template
@@ -35,7 +41,7 @@ jobs:
           vars: |
             Author: ${{ github.actor }}
             Date: ${{ github.event.head_commit.timestamp }}
-            Version: ${{ steps.version }}
+            Version: ${{ steps.current_tag.outputs.tag }}
             Changelog:
             ${{ steps.changelog.outputs.changelog }}
 
