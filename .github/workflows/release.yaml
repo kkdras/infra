@@ -11,16 +11,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Determine version
-        id: version
-        run: echo ${{ github.ref }} | sed 's/refs\/tags\/v//'
+      - name: Get previous tag
+        id: previous_tag
+        run: echo ::set-output name=tag::$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1))
 
       - name: Generate changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v4
         with:
-          fromTag: "v$(echo ${{ steps.version }} - 1 | bc)"
+          fromTag: ${{ steps.previous_tag.outputs.tag }}
           toTag: ${{ github.ref }}
+
+      - name: Save changelog
+        run: |
+          echo "${{ steps.changelog.outputs.changelog }}" > changelog.md
+          cat changelog.md
 
       - name: Render template
         id: template
@@ -37,6 +42,6 @@ jobs:
       - name: create an issue
         uses: dacbd/create-issue-action@main
         with:
-          token: ${{ github.token }}
-          title: Release ${{ steps.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Release ${{ github.ref }}
           body: ${{ steps.template.outputs.result }}
