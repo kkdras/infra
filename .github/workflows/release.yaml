@@ -28,21 +28,15 @@ jobs:
           fromTag: ${{ steps.previous_tag.outputs.tag }}
           toTag: ${{ steps.current_tag.outputs.tag }}
 
-      - name: Render template
-        id: template
-        uses: chuhlomin/render-template@v1.4
-        with:
-          template: .github/issue-template.md
-          vars: |
-            Author=${{ github.actor }}
-            Date=${{ github.event.head_commit.timestamp }}
-            Version=${{ steps.current_tag.outputs.tag }}
-            Changelog=
-            ${{ steps.changelog.outputs.changelog }}
-
       - name: create an issue
         uses: dacbd/create-issue-action@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: Release ${{ github.ref }}
-          body: ${{ steps.template.outputs.result }}
+          title: Release ${{ steps.current_tag.outputs.tag }}
+          body: |
+            Author - ${{ github.actor }}
+            Date - ${{ github.event.head_commit.timestamp }}
+            Version - ${{ steps.current_tag.outputs.tag }}
+            ##Changelog
+            ${{ steps.changelog.outputs.changelog }}
+
